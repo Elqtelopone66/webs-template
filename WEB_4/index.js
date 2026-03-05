@@ -104,7 +104,7 @@ const planetColors = [
 const loader = new FontLoader();
 loader.load('https://unpkg.com/three@0.160.0/examples/fonts/gentilis_bold.typeface.json', function (font) {
     
-    const textGeo = new TextGeometry('EMPRESA', { font: font, size: 7.5, height: 1.5, curveSegments: 5, bevelEnabled: true, bevelThickness: 0.2, bevelSize: 0.1 });
+    const textGeo = new TextGeometry('EDVYNKARIS', { font: font, size: 7.5, height: 1.5, curveSegments: 5, bevelEnabled: true, bevelThickness: 0.2, bevelSize: 0.1 });
     textGeo.center();
     solidTextMesh = new THREE.Mesh(textGeo, new THREE.MeshStandardMaterial({ color: 0xffffff, transparent: true, opacity: 0 }));
     scene.add(solidTextMesh);

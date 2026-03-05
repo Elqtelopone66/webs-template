@@ -1,44 +1,17 @@
-// Función para mostrar la ventana
+// Función para mostrar la ventana (Ahora desencadena la animación de desenrollar)
 function abrirVentana(idVentana) {
   document.getElementById(idVentana).classList.add('activa');
 }
 
-// Función para ocultar la ventana
+// Función para ocultar la ventana (Desencadena enrollar)
 function cerrarVentana(idVentana) {
   document.getElementById(idVentana).classList.remove('activa');
 }
 
-// --- NUEVA LÓGICA PARA LA ANIMACIÓN DEL TÍTULO Y EL SCROLL ---
+// --- LÓGICA MULTI-LIENZO CON SCROLL ---
 
 document.addEventListener("DOMContentLoaded", () => {
     const titulo = document.getElementById("titulo-principal");
-    
-    // 1. Animación de entrada
-    // Aumentamos de 100ms a 300ms para que tenga un inicio un pelín más tardío al cargar
-    setTimeout(() => {
-        titulo.classList.add("visible");
-    }, 300); 
-
-    // 2. Animación de salida al hacer scroll
-    window.addEventListener("scroll", () => {
-        // Aumentamos el límite de 50 a 150. Hay que bajar más la pantalla para que se active la salida.
-        if (window.scrollY > 150) {
-            titulo.classList.remove("visible");
-            titulo.classList.add("oculto");
-        } else {
-            titulo.classList.remove("oculto");
-            titulo.classList.add("visible");
-        }
-    });
-});
-
-// --- NUEVA LÓGICA PARA LA ANIMACIÓN DEL TÍTULO Y EL LIENZO CON SCROLL ---
-
-// --- NUEVA LÓGICA MULTI-LIENZO CON SCROLL ---
-
-document.addEventListener("DOMContentLoaded", () => {
-    const titulo = document.getElementById("titulo-principal");
-    // Seleccionamos TODOS los lienzos que tengan esta clase
     const lienzos = document.querySelectorAll(".contenedor-lienzo"); 
     
     // 1. Animación de entrada del título

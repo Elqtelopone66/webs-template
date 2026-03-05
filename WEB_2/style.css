@@ -3,27 +3,19 @@
 }
 
 body {
-    background-color: burlywood; /* Color de fondo que elegiste */
+    background-color: burlywood; 
     font-family: var(--fuente);
     margin: 0;
 }
 
-/* --- TRANSICIÓN REVEAL HORIZONTAL (ALTA GAMA) --- */
-
-/* --- TRANSICIÓN REVEAL HORIZONTAL (NÍTIDA, SIN EFECTO BORROSO) --- */
+/* --- TRANSICIÓN REVEAL HORIZONTAL --- */
 
 .contenedor-lienzo {
   width: 100%;
   padding: 100px 0; 
   overflow: hidden; 
-  
-  /* La máscara recorta el lienzo desde la derecha */
   clip-path: inset(0 100% 0 0);
-  
-  /* CERO blur. Solo lo empujamos ligerísimamente 20px para acompañar la entrada */
   transform: translateX(-20px); 
-  
-  /* Animación suave de 2.5s */
   transition: clip-path 2.5s cubic-bezier(0.19, 1, 0.22, 1),
               transform 2.5s cubic-bezier(0.19, 1, 0.22, 1);
 }
@@ -38,132 +30,196 @@ body {
   transform: translateX(20px); 
 }
 
-/* --- FONDO DEL LIENZO EN CONSTANTE MOVIMIENTO --- */
+/* --- FONDO DEL LIENZO --- */
 
 .lienzo-diagonal {
-  /* Hacemos el degradado 3 veces más ancho para que tenga espacio para "deslizarse" */
   background: linear-gradient(90deg, #8B4513, #D2691E, #A0522D, #8B4513);
   background-size: 300% 100%;
-  
   transform: skewY(6deg); 
   padding: 60px 0; 
   box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-  
-  /* El truco de magia: Animación infinita que mueve los colores de izquierda a derecha */
   animation: flujoLiquido 10s linear infinite;
-  
-  position: relative; /* Para que las mandalas se queden dentro */
+  position: relative; 
 }
 
-/* El motor que hace que el fondo fluya de forma constante sin detenerse jamás */
 @keyframes flujoLiquido {
   0% { background-position: 100% 0; }
   100% { background-position: 0 0; }
 }
 
-/* Enderezamos el contenido y lo inclinamos en contra del lienzo */
-/* --- AHORA SÍ: LA ESTRUCTURA DE TU DIBUJO --- */
+/* --- BOTONES DEL LIENZO --- */
 
-/* Enderezamos el contenedor para tener una línea plana imaginaria */
 .contenido-recto {
   transform: skewY(-6deg); 
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 15px; /* El espacio entre los cortes azules de tu dibujo */
+  gap: 15px; 
+  position: relative;
+  z-index: 2; 
 }
 
-/* El estilo del botón cortado */
 .btn-menu {
   background: rgba(255, 255, 255, 0.1); 
   backdrop-filter: blur(5px); 
   color: white;
-  padding: 20px 45px; /* Un poco más ancho para compensar el corte de las puntas */
+  padding: 20px 45px; 
   font-size: 18px;
   font-weight: bold;
   cursor: pointer;
   transition: all 0.3s ease;
-  
-  /* A la basura los bordes redondos y las líneas feas */
   border: none; 
   border-radius: 0; 
-  
-  /* LAS LÍNEAS AZULES DE TU DIBUJO: Esto corta el botón formando un paralelogramo con inclinación / */
   clip-path: polygon(15% 0, 100% 0, 85% 100%, 0 100%);
 }
 
-/* LAS FLECHAS NEGRAS DE TU DIBUJO: Escalones bajando (\) */
-.btn-menu:nth-child(1) {
-  transform: translateY(-30px); /* Sobre nosotros (Sube) */
-}
-.btn-menu:nth-child(2) {
-  transform: translateY(0); /* Servicios (Centro) */
-}
-.btn-menu:nth-child(3) {
-  transform: translateY(30px); /* Contacto (Baja) */
-}
+.btn-menu:nth-child(1) { transform: translateY(-30px); }
+.btn-menu:nth-child(2) { transform: translateY(0); }
+.btn-menu:nth-child(3) { transform: translateY(30px); }
 
-/* Efecto Hover: Respetamos la altura de cada uno, pero hacemos que "salten" 5px al pasar el mouse */
 .btn-menu:nth-child(1):hover { transform: translateY(-35px); background: rgba(255, 255, 255, 0.3); }
 .btn-menu:nth-child(2):hover { transform: translateY(-5px); background: rgba(255, 255, 255, 0.3); }
 .btn-menu:nth-child(3):hover { transform: translateY(25px); background: rgba(255, 255, 255, 0.3); }
-/* Ocultamos las ventanas por defecto */
+
+
+/* ============================================== */
+/* --- INGENIERÍA MAKIMONO (PERGAMINO CHINO) ---  */
+/* ============================================== */
+
+/* Fondo oscuro overlay de la ventana */
 .ventana-flotante {
-  display: none; 
-  position: fixed; /* Flota sobre toda la pantalla */
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%); /* Lo centra exactamente en el medio */
-  width: 90%;
-  max-width: 400px;
-  background-color: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); /* Sombra para el efecto flotante */
-  z-index: 1000; /* Asegura que esté al frente */
-  flex-direction: column;
-}
-
-/* Clase para mostrar la ventana cuando JS interactúe con ella */
-.ventana-flotante.activa {
+  visibility: hidden; 
+  opacity: 0;
+  position: fixed; 
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.8);
+  z-index: 1000; 
   display: flex;
-}
-
-/* Estilos de la cabecera de la ventana */
-.ventana-header {
-  background-color: #f4f4f9;
-  padding: 10px 15px;
-  border-bottom: 1px solid #ddd;
-  border-radius: 8px 8px 0 0;
-  display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
+  /* Retrasamos ocultar la visibilidad hasta que termine la animacion de opacidad */
+  transition: visibility 0s linear 0.8s, opacity 0.5s ease 0.3s;
 }
 
-.titulo {
-  font-weight: bold;
-  color: #333;
+.ventana-flotante.activa {
+  visibility: visible;
+  opacity: 1;
+  transition: opacity 0.4s ease;
 }
 
-.btn-cerrar {
+/* Contenedor central que sostiene rodillos y papel */
+.makimono-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 400px; /* Altura base del pergamino */
+}
+
+/* Los cilindros de madera en los extremos */
+.makimono-rodillo {
+  width: 25px;
+  height: 440px; 
+  background: linear-gradient(to right, #1a0f0a, #3e2211, #1a0f0a); 
+  border-radius: 12px;
+  box-shadow: 5px 10px 20px rgba(0,0,0,0.6);
+  z-index: 3;
+  position: relative;
+}
+
+/* Topes de los cilindros */
+.makimono-rodillo::before, .makimono-rodillo::after {
+  content: '';
+  position: absolute;
+  width: 35px;
+  height: 15px;
+  background: #0f0703;
+  left: -5px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.8);
+}
+.makimono-rodillo::before { top: -10px; }
+.makimono-rodillo::after { bottom: -10px; }
+
+/* El papel que se despliega */
+.makimono-pergamino {
+  height: 400px;
+  width: 0; /* Empieza cerrado */
+  background-color: #e8d5a6; /* Tono papel antiguo */
+  background-image: url('https://www.transparenttextures.com/patterns/rice-paper.png');
+  box-shadow: inset 0 0 40px rgba(100, 50, 0, 0.4);
+  overflow: hidden; /* Oculta el texto mientras está cerrado */
+  border-top: 3px solid #7d4d2b;
+  border-bottom: 3px solid #7d4d2b;
+  position: relative;
+  z-index: 2;
+  /* Animación de cierre más rápida */
+  transition: width 0.6s cubic-bezier(0.8, 0, 0.2, 1); 
+}
+
+/* Al estar activa, el papel crece forzando los rodillos a separarse */
+.ventana-flotante.activa .makimono-pergamino {
+  width: 80vw;
+  max-width: 700px;
+  /* Animación de desenrollado épica y suave */
+  transition: width 1.2s cubic-bezier(0.25, 1, 0.5, 1) 0.3s; 
+}
+
+/* El contenido interno de texto */
+.makimono-contenido {
+  width: 80vw;
+  max-width: 700px;
+  padding: 40px 50px;
+  box-sizing: border-box;
+  opacity: 0; /* Empieza invisible */
+  transform: scale(0.9);
+  color: #0a0a0a; /* Negro oscuro alto contraste */
+  /* El contenido desaparece inmediatamente al cerrar */
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+/* El contenido aparece DESPUÉS de que el pergamino se abre */
+.ventana-flotante.activa .makimono-contenido {
+  opacity: 1;
+  transform: scale(1);
+  /* Delay de 1s para asegurar que el pergamino ya está casi abierto */
+  transition: opacity 0.6s ease 1s, transform 0.6s ease 1s; 
+}
+
+/* Titulos internos con tu toque oscuro y rojo */
+.makimono-contenido h2 {
+  color: #8b0000; /* Rojo sangre */
+  border-bottom: 2px solid #0a0a0a;
+  padding-bottom: 10px;
+  margin-top: 0;
+  font-family: serif; 
+  font-size: 2rem;
+}
+
+/* Boton de cierre integrado al diseño */
+.btn-cerrar-makimono {
+  position: absolute;
+  top: 20px;
+  right: 25px;
   background: none;
   border: none;
-  font-size: 16px;
+  font-size: 24px;
   cursor: pointer;
-  color: #888;
+  color: #8b0000;
+  font-weight: bold;
+  transition: transform 0.3s, color 0.3s;
 }
 
-.btn-cerrar:hover {
-  color: #ff4c4c;
+.btn-cerrar-makimono:hover {
+  color: #ff0000;
+  transform: rotate(90deg);
 }
 
-.ventana-contenido {
-  padding: 20px;
-  color: #333;
-}
 
 /* --- NUEVOS ESTILOS PARA EL TITULO DE INICIO --- */
 
-/* Hace que esta sección ocupe el 100% del alto de la pantalla del usuario */
 .seccion-hero {
     height: 100vh; 
     display: flex;
@@ -175,11 +231,8 @@ body {
     font-size: 5.5rem;
     font-weight: 800;
     color: #4a2e15;
-    
     clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%);
     transform: translateY(80px);
-    
-    /* CAMBIO: Subimos el tiempo a 3.5 segundos para que la transición sea súper notoria y majestuosa */
     transition: clip-path 3.5s cubic-bezier(0.19, 1, 0.22, 1), 
                 transform 3.5s cubic-bezier(0.19, 1, 0.22, 1);
 }
@@ -191,132 +244,73 @@ body {
 
 .titulo-animado.oculto {
     clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
-    /* CAMBIO: Hacemos que suba más (-80px) para exagerar el movimiento de salida */
     transform: translateY(-80px);
 }
 
 /* --- MAGIA DEL FONDO DE MANDALAS --- */
 
-/* Ajuste necesario al lienzo para que contenga los fondos animados */
-.lienzo-diagonal {
-  position: relative; /* Esto es vital para que los fondos se queden adentro */
-}
-
-/* Aseguramos que los botones siempre estén por encima de los mandalas */
-.contenido-recto {
-  position: relative;
-  z-index: 2; 
-}
-
-/* Estilos compartidos para las capas de mandalas */
 .fondo-mandalas {
   position: absolute;
   top: 0; left: 0; 
   width: 100%; height: 100%;
-  z-index: 1; /* Se quedan detrás de los botones */
-  background-repeat: repeat; /* Repite el patrón por todo el lienzo */
-  opacity: 0; /* Empiezan invisibles */
+  z-index: 1; 
+  background-repeat: repeat; 
+  opacity: 0; 
 }
 
-/* Primer Mandala */
 .mandala-1 {
-  /* Usamos un patrón transparente elegante (puedes cambiar la URL por tu propia imagen de mandala) */
   background-image: url('https://www.transparenttextures.com/patterns/flowers.png');
-  /* La animación dura 12 segundos, es lineal y se repite infinitamente */
   animation: transicionMandala1 12s linear infinite;
 }
 
-/* Segundo Mandala */
 .mandala-2 {
-  /* Otro patrón distinto */
   background-image: url('https://www.transparenttextures.com/patterns/flower-style.png');
   animation: transicionMandala2 12s linear infinite;
-  /* Retrasamos esta animación 6 segundos para que empiece cuando la primera se esté ocultando */
   animation-delay: 6s; 
 }
 
-/* --- ANIMACIONES KEYFRAMES --- */
-/* --- ANIMACIONES KEYFRAMES (VERSIÓN MÁS NOTORIA) --- */
-
 @keyframes transicionMandala1 {
-  0% { 
-    background-position: 0 0; 
-    opacity: 0; 
-  }
-  20% { 
-    opacity: 0.8; /* Lo subimos al 80% de visibilidad para que resalte mucho más */
-  }
-  80% { 
-    opacity: 0.8; /* Se mantiene visible casi todo el recorrido */
-  }
-  100% { 
-    background-position: 400px 400px; /* Se mueve en diagonal */
-    opacity: 0; 
-  }
+  0% { background-position: 0 0; opacity: 0; }
+  20% { opacity: 0.8; }
+  80% { opacity: 0.8; }
+  100% { background-position: 400px 400px; opacity: 0; }
 }
 
 @keyframes transicionMandala2 {
-  0% { 
-    background-position: 0 0; 
-    opacity: 0; 
-  }
-  20% { 
-    opacity: 0.8; 
-  }
-  80% { 
-    opacity: 0.8; 
-  }
-  100% { 
-    background-position: -400px -400px; /* Se mueve en la diagonal contraria */
-    opacity: 0; 
-  }
+  0% { background-position: 0 0; opacity: 0; }
+  20% { opacity: 0.8; }
+  80% { opacity: 0.8; }
+  100% { background-position: -400px -400px; opacity: 0; }
 }
 
 /* ============================================== */
 /* ESTILOS PARA EL LIENZO INVERSO (/)             */
 /* ============================================== */
 
-/* 1. Entra desde la derecha hacia la izquierda */
 .contenedor-lienzo.inverso {
-  clip-path: inset(0 0 0 100%); /* Oculto hacia la derecha */
+  clip-path: inset(0 0 0 100%); 
   transform: translateX(20px); 
 }
 .contenedor-lienzo.inverso.visible {
-  clip-path: inset(0 0 0 0); /* Visible */
+  clip-path: inset(0 0 0 0); 
   transform: translateX(0); 
 }
 .contenedor-lienzo.inverso.oculto-abajo {
-  clip-path: inset(0 100% 0 0); /* Se va por la izquierda al bajar más */
+  clip-path: inset(0 100% 0 0); 
   transform: translateX(-20px); 
 }
 
-/* 2. Invertimos la inclinación del fondo (hacia arriba) */
-.lienzo-diagonal.inverso {
-  transform: skewY(-6deg); 
-}
+.lienzo-diagonal.inverso { transform: skewY(-6deg); }
+.contenido-recto.inverso { transform: skewY(6deg); }
 
-/* 3. Volvemos a enderezar el contenedor de botones */
-.contenido-recto.inverso {
-  transform: skewY(6deg); 
-}
-
-/* 4. Cortamos los botones a la inversa (\) */
 .contenido-recto.inverso .btn-menu {
   clip-path: polygon(0 0, 85% 0, 100% 100%, 15% 100%);
 }
 
-/* 5. Invertimos los escalones para que suban (/) */
-.contenido-recto.inverso .btn-menu:nth-child(1) {
-  transform: translateY(30px); /* Proyectos (Empieza abajo) */
-}
-.contenido-recto.inverso .btn-menu:nth-child(2) {
-  transform: translateY(0); /* Grupos (Centro) */
-}
-.contenido-recto.inverso .btn-menu:nth-child(3) {
-  transform: translateY(-30px); /* Sucursales (Termina arriba) */
-}
+.contenido-recto.inverso .btn-menu:nth-child(1) { transform: translateY(30px); }
+.contenido-recto.inverso .btn-menu:nth-child(2) { transform: translateY(0); }
+.contenido-recto.inverso .btn-menu:nth-child(3) { transform: translateY(-30px); }
 
-/* 6. Hover de los escalones invertidos */
 .contenido-recto.inverso .btn-menu:nth-child(1):hover { transform: translateY(25px); background: rgba(255, 255, 255, 0.3); }
 .contenido-recto.inverso .btn-menu:nth-child(2):hover { transform: translateY(-5px); background: rgba(255, 255, 255, 0.3); }
 .contenido-recto.inverso .btn-menu:nth-child(3):hover { transform: translateY(-35px); background: rgba(255, 255, 255, 0.3); }
@@ -326,11 +320,10 @@ body {
 /* ESTILOS DEL MENSAJE FINAL Y FOOTER             */
 /* ============================================== */
 
-/* El bloque del mensaje antes del footer */
 .mensaje-final {
     text-align: center;
-    padding: 100px 20px 80px 20px; /* Mucho aire para que respire el diseño */
-    color: #4a2e15; /* El mismo café elegante del título principal */
+    padding: 100px 20px 80px 20px; 
+    color: #4a2e15; 
 }
 
 .titulo-cierre {
@@ -345,16 +338,15 @@ body {
     max-width: 600px;
     margin: 0 auto;
     line-height: 1.6;
-    color: #6a4a2e; /* Un tono un poco más claro para la lectura */
+    color: #6a4a2e; 
 }
 
-/* El pie de página tradicional */
 .footer-principal {
-    background-color: #2b1708; /* Un café súper oscuro, casi negro, para máximo contraste */
-    color: rgba(255, 255, 255, 0.7); /* Texto blanco ligeramente apagado para no encandilar */
+    background-color: #0a0a0a; /* Oscurecido para contrastar mejor con los pergaminos */
+    color: rgba(255, 255, 255, 0.7); 
     text-align: center;
     padding: 30px 20px;
-    border-top: 4px solid #D2691E; /* Una delgada línea naranja vibrante para separar */
+    border-top: 4px solid #8b0000; /* Borde rojo sangre inferior */
 }
 
 .footer-contenido p {
